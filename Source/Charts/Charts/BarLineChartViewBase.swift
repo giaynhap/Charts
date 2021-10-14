@@ -791,11 +791,13 @@ open class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChartD
                     
                     _decelerationDisplayLink = NSUIDisplayLink(target: self, selector: #selector(BarLineChartViewBase.decelerationLoop))
                     _decelerationDisplayLink.add(to: RunLoop.main, forMode: RunLoop.Mode.common)
+                  self.delegate?.chartViewTouchEnd?(self)
                 }
                 
                 _isDragging = false
                 
                 delegate?.chartViewDidEndPanning?(self)
+             
             }
             
             if _outerScrollView !== nil
@@ -803,7 +805,7 @@ open class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChartD
                 _outerScrollView?.nsuiIsScrollEnabled = true
                 _outerScrollView = nil
             }
-          self.delegate?.chartViewTouchEnd?(self)
+      
         }
     }
     
