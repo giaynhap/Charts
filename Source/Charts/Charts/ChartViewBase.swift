@@ -41,6 +41,11 @@ public protocol ChartViewDelegate
 
     // Callbacks when Animator stops animating
     @objc optional func chartView(_ chartView: ChartViewBase, animatorDidStop animator: Animator)
+  
+  
+    @objc optional func chartViewTouchStart(_ chartView: ChartViewBase)
+    @objc optional func chartViewTouchEnd(_ chartView: ChartViewBase)
+    @objc optional func chartViewTouchDrag(_ chartView: ChartViewBase)
 }
 
 open class ChartViewBase: NSUIView, ChartDataProvider, AnimatorDelegate
@@ -870,20 +875,24 @@ open class ChartViewBase: NSUIView, ChartDataProvider, AnimatorDelegate
     open override func nsuiTouchesBegan(_ touches: Set<NSUITouch>, withEvent event: NSUIEvent?)
     {
         super.nsuiTouchesBegan(touches, withEvent: event)
+        self.delegate?.chartViewTouchStart?(self)
     }
     
     open override func nsuiTouchesMoved(_ touches: Set<NSUITouch>, withEvent event: NSUIEvent?)
     {
         super.nsuiTouchesMoved(touches, withEvent: event)
+        self.delegate?.chartViewTouchDrag?(self)
     }
     
     open override func nsuiTouchesEnded(_ touches: Set<NSUITouch>, withEvent event: NSUIEvent?)
     {
         super.nsuiTouchesEnded(touches, withEvent: event)
+        self.delegate?.chartViewTouchEnd?(self)
     }
     
     open override func nsuiTouchesCancelled(_ touches: Set<NSUITouch>?, withEvent event: NSUIEvent?)
     {
         super.nsuiTouchesCancelled(touches, withEvent: event)
+      self.delegate?.chartViewTouchEnd?(self)
     }
 }
