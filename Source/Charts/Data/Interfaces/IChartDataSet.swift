@@ -1,5 +1,5 @@
 //
-//  ChartDataSetProtocol.swift
+//  IChartDataSet.swift
 //  Charts
 //
 //  Copyright 2015 Daniel Cohen Gindi & Philipp Jahoda
@@ -13,14 +13,14 @@ import Foundation
 import CoreGraphics
 
 @objc
-public protocol ChartDataSetProtocol
+public protocol IChartDataSet
 {
     // MARK: - Data functions and accessors
     
     /// Use this method to tell the data set that the underlying data has changed
     func notifyDataSetChanged()
     
-    /// Calculates the minimum and maximum x and y values (xMin, xMax, yMin, yMax).
+    /// Calculates the minimum and maximum x and y values (_xMin, _xMax, _yMin, _yMax).
     func calcMinMax()
     
     /// Calculates the min and max y-values from the Entry closest to the given fromX to the Entry closest to the given toX value.
@@ -196,7 +196,10 @@ public protocol ChartDataSetProtocol
     var isHighlightEnabled: Bool { get }
     
     /// Custom formatter that is used instead of the auto-formatter if set
-    var valueFormatter: ValueFormatter { get set }
+    var valueFormatter: IValueFormatter? { get set }
+    
+    /// `true` if the valueFormatter object of this DataSet is null.
+    var needsFormatter: Bool { get }
     
     /// Sets/get a single color for value text.
     /// Setting the color clears the colors array and adds a single color.
@@ -208,9 +211,6 @@ public protocol ChartDataSetProtocol
     
     /// the font for the value-text labels
     var valueFont: NSUIFont { get set }
-    
-    /// The rotation angle (in degrees) for value-text labels
-    var valueLabelAngle: CGFloat { get set }
     
     /// The form to draw for this dataset in the legend.
     ///

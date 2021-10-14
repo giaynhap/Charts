@@ -1,5 +1,5 @@
 //
-//  ValueFormatter.swift
+//  IValueFormatter.swift
 //  Charts
 //
 //  Copyright 2015 Daniel Cohen Gindi & Philipp Jahoda
@@ -16,8 +16,8 @@ import Foundation
 /// Simply create your own formatting class and let it implement ValueFormatter. Then override the stringForValue()
 /// method and return whatever you want.
 
-@objc(ChartValueFormatter)
-public protocol ValueFormatter: class
+@objc(IChartValueFormatter)
+public protocol IValueFormatter: class
 {
     
     /// Called when a value (from labels inside the chart) is formatted before being drawn.
