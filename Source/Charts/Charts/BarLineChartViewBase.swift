@@ -730,6 +730,7 @@ open class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChartD
                         // Prevent the parent scroll view from scrolling
                         _outerScrollView?.nsuiIsScrollEnabled = false
                     }
+                  
                 }
                 
                 _lastPanPoint = recognizer.translation(in: self)
@@ -740,6 +741,8 @@ open class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChartD
                 
                 _isDragging = false
             }
+          
+          self.delegate?.chartViewTouchStart?(self)
         }
         else if recognizer.state == NSUIGestureRecognizerState.changed
         {
@@ -773,6 +776,7 @@ open class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChartD
                     self.highlightValue(h, callDelegate: true)
                 }
             }
+          self.delegate?.chartViewTouchChange?(self)
         }
         else if recognizer.state == NSUIGestureRecognizerState.ended || recognizer.state == NSUIGestureRecognizerState.cancelled
         {
@@ -799,6 +803,7 @@ open class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChartD
                 _outerScrollView?.nsuiIsScrollEnabled = true
                 _outerScrollView = nil
             }
+          self.delegate?.chartViewTouchEnd?(self)
         }
     }
     

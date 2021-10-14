@@ -1021,7 +1021,7 @@ open class ChartViewBase: NSUIView, ChartDataProvider, AnimatorDelegate
             super.nsuiTouchesBegan(touches, withEvent: event)
         }
       
-      self.delegate?.chartViewTouchStart?(self)
+      
     }
     
     open override func nsuiTouchesMoved(_ touches: Set<NSUITouch>, withEvent event: NSUIEvent?)
@@ -1030,7 +1030,6 @@ open class ChartViewBase: NSUIView, ChartDataProvider, AnimatorDelegate
         {
             super.nsuiTouchesMoved(touches, withEvent: event)
         }
-      self.delegate?.chartViewTouchChange?(self)
     }
     
     open override func nsuiTouchesEnded(_ touches: Set<NSUITouch>, withEvent event: NSUIEvent?)
@@ -1039,7 +1038,6 @@ open class ChartViewBase: NSUIView, ChartDataProvider, AnimatorDelegate
         {
             super.nsuiTouchesEnded(touches, withEvent: event)
         }
-      self.delegate?.chartViewTouchEnd?(self)
     }
     
     open override func nsuiTouchesCancelled(_ touches: Set<NSUITouch>?, withEvent event: NSUIEvent?)
@@ -1048,6 +1046,5 @@ open class ChartViewBase: NSUIView, ChartDataProvider, AnimatorDelegate
         {
             super.nsuiTouchesCancelled(touches, withEvent: event)
         }
-      self.delegate?.chartViewTouchEnd?(self)
     }
 }
