@@ -89,7 +89,7 @@ open class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChartD
     /// **default**: An instance of XAxisRenderer
     @objc open lazy var xAxisRenderer = XAxisRenderer(viewPortHandler: _viewPortHandler, xAxis: _xAxis, transformer: _leftAxisTransformer)
     
-    internal var _tapGestureRecognizer: NSUITapGestureRecognizer!
+    internal var _tapGestureRecognizer: UILongPressGestureRecognizer!
     internal var _doubleTapGestureRecognizer: NSUITapGestureRecognizer!
     #if !os(tvOS)
     internal var _pinchGestureRecognizer: NSUIPinchGestureRecognizer!
@@ -123,7 +123,8 @@ open class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChartD
         
         self.highlighter = ChartHighlighter(chart: self)
         
-        _tapGestureRecognizer = NSUITapGestureRecognizer(target: self, action: #selector(tapGestureRecognized(_:)))
+        _tapGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(tapGestureRecognized(_:)))
+      _tapGestureRecognizer.minimumPressDuration = 0.2
         _doubleTapGestureRecognizer = NSUITapGestureRecognizer(target: self, action: #selector(doubleTapGestureRecognized(_:)))
         _doubleTapGestureRecognizer.nsuiNumberOfTapsRequired = 2
         _panGestureRecognizer = NSUIPanGestureRecognizer(target: self, action: #selector(panGestureRecognized(_:)))
@@ -539,7 +540,7 @@ open class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChartD
             return
         }
         
-        if recognizer.state == NSUIGestureRecognizerState.ended
+        if recognizer.state == NSUIGestureRecognizerState.began
         {
             if !isHighLightPerTapEnabled { return }
             
@@ -555,6 +556,8 @@ open class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChartD
                 lastHighlighted = h
                 highlightValue(h, callDelegate: true)
             }
+        } else if recognizer.state == NSUIGestureRecognizerState.ended {
+          self.delegate?.chartViewTouchEnd?(self)
         }
     }
     
@@ -742,6 +745,7 @@ open class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChartD
                 _isDragging = false
             }
           
+       
           self.delegate?.chartViewTouchStart?(self)
         }
         else if recognizer.state == NSUIGestureRecognizerState.changed
@@ -791,12 +795,13 @@ open class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChartD
                     
                     _decelerationDisplayLink = NSUIDisplayLink(target: self, selector: #selector(BarLineChartViewBase.decelerationLoop))
                     _decelerationDisplayLink.add(to: RunLoop.main, forMode: RunLoop.Mode.common)
-                  self.delegate?.chartViewTouchEnd?(self)
+             
                 }
                 
                 _isDragging = false
                 
-                
+                delegate?.chartViewDidEndPanning?(self)
+             
             }
             
             if _outerScrollView !== nil
@@ -804,10 +809,8 @@ open class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChartD
                 _outerScrollView?.nsuiIsScrollEnabled = true
                 _outerScrollView = nil
             }
-          
-          delegate?.chartViewDidEndPanning?(self)
-       
       
+          self.delegate?.chartViewTouchEnd?(self)
         }
     }
     
@@ -1296,7 +1299,7 @@ open class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChartD
 
     /// Centers the viewport to the specified y-value on the y-axis.
     /// This also refreshes the chart by calling setNeedsDisplay().
-    /// 
+    ///
     /// - Parameters:
     ///   - yValue:
     ///   - axis: - which axis should be used as a reference for the y-axis
@@ -1316,7 +1319,7 @@ open class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChartD
 
     /// This will move the left side of the current viewport to the specified x-value on the x-axis, and center the viewport to the specified y-value on the y-axis.
     /// This also refreshes the chart by calling setNeedsDisplay().
-    /// 
+    ///
     /// - Parameters:
     ///   - xValue:
     ///   - yValue:
@@ -1683,7 +1686,7 @@ open class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChartD
     
     /// If set to true, highlighting per dragging over a fully zoomed out chart is enabled
     /// You might want to disable this when using inside a `NSUIScrollView`
-    /// 
+    ///
     /// **default**: true
     @objc open var isHighlightPerDragEnabled: Bool
     {
